@@ -8,7 +8,6 @@ openai.api_key = 'enter your API Key'
 # Load data
 data = pd.read_csv("./data.csv")
 
-# Set page configuration
 st.set_page_config(page_title="ESG Dashboard Chatbot", page_icon="💬", layout="wide")
 
 # Display title and description
@@ -29,8 +28,9 @@ filtered_data = data[(data['Industry'] == selected_industry) & (data['Total ESG 
 st.write("### Filtered Data")
 st.dataframe(filtered_data)
 
-# Placeholder for displaying the chatbot response
-response_placeholder = st.empty()
+# Initialize session state for response
+if "response" not in st.session_state:
+    st.session_state.response = ""
 
 # Function to generate chatbot response
 def generate_response(filtered_data, user_query):
@@ -51,10 +51,13 @@ user_query = st.text_input("Ask a question about the filtered data:")
 # Button to generate response
 if st.button("Ask"):
     if user_query:
-        response = generate_response(filtered_data, user_query)
-        response_placeholder.markdown(f"**Response:** {response}")
+        st.session_state.response = generate_response(filtered_data, user_query)
     else:
-        response_placeholder.text("Please enter a question.")
+        st.session_state.response = "Please enter a question."
+
+# Display the response
+if st.session_state.response:
+    st.markdown(f"**Response:** {st.session_state.response}")
 
 # Add some styling
 st.markdown("""
@@ -79,27 +82,36 @@ st.markdown("""
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 4px;
-    background-color: #f8f8f8;
+    background-color: #333;  /* Dark background */
+    color: white;  /* White text */
     font-size: 16px;
-    color: black;  /* Set text color to black */
 }
 
 .css-1oe5cao {
     margin-top: 20px;
 }
 
-.stAlert p {
+.stAlert p, .stMarkdown p {
     font-size: 16px;
-    color: #333;
-}
-
-.stMarkdown p {
-    font-size: 16px;
-    color: #333;
+    color: #d1d1d1;  /* Lighter text color for better readability */
 }
 
 body {
-    background-color: #f0f2f6;  /* Set the background color */
+    background-color: #1e1e1e;  /* Dark background */
+}
+
+.stMarkdown h3, .stMarkdown h4 {
+    color: #4CAF50;  /* Set the header color */
+}
+
+.response-container {
+    background-color: #2c2c2c;  /* Darker background for the response box */
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    color: #d1d1d1;  /* Light text color for readability */
+    font-size: 16px;
+    line-height: 1.6;
 }
 </style>
 """, unsafe_allow_html=True)
