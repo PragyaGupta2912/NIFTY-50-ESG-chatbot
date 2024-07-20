@@ -8,7 +8,6 @@ openai.api_key = 'enter your API Key'
 # Load data
 data = pd.read_csv("./data.csv")
 
-# Display data in Streamlit
 st.title("ESG Dashboard NIFTY 50")
 st.write("Here is the data used in the dashboard:")
 st.dataframe(data)
@@ -22,23 +21,41 @@ filtered_data = data[(data['Industry'] == selected_industry) & (data['Total ESG 
 st.write("Filtered Data:")
 st.dataframe(filtered_data)
 
-# Placeholder for displaying the description
-description_placeholder = st.empty()
+# Placeholder for displaying the chatbot response
+response_placeholder = st.empty()
 
-# Function to generate description
-def generate_description(filtered_data):
-    prompt = f"Generate a description for the following filtered data: {filtered_data.to_dict()}"
+# Function to generate chatbot response
+def generate_response(filtered_data, user_query):
+    prompt = f"Data: {filtered_data.to_dict()}\nUser: {user_query}\nAssistant:"
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are an assistant that generates descriptions for data."},
+            {"role": "system", "content": "You are an assistant that provides answers based on the data."},
             {"role": "user", "content": prompt}
         ]
     )
-    description = response['choices'][0]['message']['content'].strip()
-    return description
+    answer = response['choices'][0]['message']['content'].strip()
+    return answer
 
-# Button to generate description
-if st.button("Generate Description"):
-    description = generate_description(filtered_data)
-    description_placeholder.text(description)
+# Input for user queries
+user_query = st.text_input("Ask a question about the filtered data:")
+
+# Button to generate response
+if st.button("Ask"):
+    if user_query:
+        response = generate_response(filtered_data, user_query)
+        response_placeholder.markdown(f"**Response:** {response}")
+    else:
+        response_placeholder.text("Please enter a question.")
+
+# Chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+st.title("Chat History")
+for message in st.session_state.messages:
+    st.write(message)
+
+if user_query:
+    st.session_state.messages.append(f"User: {user_query}")
+    st.session_state.messages.append(f"Assistant: {response}")
