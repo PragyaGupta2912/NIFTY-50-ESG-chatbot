@@ -3,7 +3,7 @@ import pandas as pd
 import openai
 
 # Set up OpenAI API key
-openai.api_key = 'enter API Key'
+openai.api_key = 'enter your API Key'
 
 # Load data
 data = pd.read_csv("./data.csv")
