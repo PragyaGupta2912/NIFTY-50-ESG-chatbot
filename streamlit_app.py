@@ -51,7 +51,7 @@ if st.button("Ask"):
 if st.session_state.response:
     st.markdown(f"**Response:** {st.session_state.response}")
 
-# Add some styling
+# Add CSS styling
 st.markdown("""
 <style>
 .stButton button {
