@@ -40,17 +40,14 @@ def generate_response(filtered_data, user_query):
     answer = response['choices'][0]['message']['content'].strip()
     return answer
 
-# Input for user queries
 user_query = st.text_input("Ask a question about the filtered data:")
 
-# Button to generate response
 if st.button("Ask"):
     if user_query:
         st.session_state.response = generate_response(filtered_data, user_query)
     else:
         st.session_state.response = "Please enter a question."
 
-# Display the response
 if st.session_state.response:
     st.markdown(f"**Response:** {st.session_state.response}")
 
