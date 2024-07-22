@@ -16,17 +16,14 @@ st.markdown("Welcome to the ESG Dashboard chatbot. Ask questions about the filte
 st.write("### Data Used in the Dashboard")
 st.dataframe(data)
 
-# Simulate interactions
 st.sidebar.header("Filter Options")
 selected_industry = st.sidebar.selectbox("Select Industry", data['Industry'].unique())
 min_risk_score = st.sidebar.slider("Minimum ESG Risk Score", min_value=0, max_value=100, value=10)
 
-# Filter data based on interactions
 filtered_data = data[(data['Industry'] == selected_industry) & (data['Total ESG Risk score'] >= min_risk_score)]
 st.write("### Filtered Data")
 st.dataframe(filtered_data)
 
-# Initialize session state for response
 if "response" not in st.session_state:
     st.session_state.response = ""
 
