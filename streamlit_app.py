@@ -10,11 +10,9 @@ data = pd.read_csv("./data.csv")
 
 st.set_page_config(page_title="ESG Dashboard Chatbot", page_icon="💬", layout="wide")
 
-# Display title and description
 st.title("ESG Dashboard NIFTY 50 💬")
 st.markdown("Welcome to the ESG Dashboard chatbot. Ask questions about the filtered data to get insights.")
 
-# Load and display data
 st.write("### Data Used in the Dashboard")
 st.dataframe(data)
 
